@@ -17,9 +17,13 @@
     <Content Include="@(RustOutput)" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
+  </ItemGroup>
+
   <Target Name="Cargo" BeforeTargets="CoreCompile" Inputs="@(RustCompile)" Outputs="@(RustOutput)">
     <Exec Condition="$(Configuration) == 'Debug'" Command="cargo build" />
     <Exec Condition="$(Configuration) == 'Release'" Command="cargo build --release" />
-    <Exec Command="rnet-gen $(RustTarget).dll > FFI.cs" />
+    <Exec Command="rnet-gen $(RustTarget).dll &gt; FFI.cs" />
   </Target>
 </Project>

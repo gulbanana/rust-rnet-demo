@@ -14,23 +14,28 @@ namespace RustDotnetBindgenDemo
         public interface IOpaqueHandle: IEquatable<IOpaqueHandle>, IDisposable {}
 
         
-        public static void SayHello(
-            String name
-        ) {
-            _FnSayHello(_AllocStr(name));
-        }
-        public static int AddNumbers(
+        public static void SetNumbers(
             IReadOnlyCollection<int> values
         ) {
-            return _FnAddNumbers(_AllocSlice<int, int>(values, 4, 4, _arg1 => _arg1));
+            _FnSetNumbers(_AllocSlice<int, int>(values, 4, 4, _arg1 => _arg1));
         }
-        [DllImport("rust_dotnet_bindgen_demo", EntryPoint = "rnet_export_say_hello", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void _FnSayHello(
-            _RawSlice name
-        );
-        [DllImport("rust_dotnet_bindgen_demo", EntryPoint = "rnet_export_add_numbers", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int _FnAddNumbers(
+        public static int AddLoop(
+        ) {
+            return _FnAddLoop();
+        }
+        public static int AddFold(
+        ) {
+            return _FnAddFold();
+        }
+        [DllImport("rust_dotnet_bindgen_demo", EntryPoint = "rnet_export_set_numbers", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void _FnSetNumbers(
             _RawSlice values
+        );
+        [DllImport("rust_dotnet_bindgen_demo", EntryPoint = "rnet_export_add_loop", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int _FnAddLoop(
+        );
+        [DllImport("rust_dotnet_bindgen_demo", EntryPoint = "rnet_export_add_fold", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int _FnAddFold(
         );
 
 

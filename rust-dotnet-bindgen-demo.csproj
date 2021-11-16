@@ -10,11 +10,13 @@
 
   <ItemGroup>
     <Content Include="$(RustOutput)" Link="rust_dotnet_bindgen_demo.dll" CopyToOutputDirectory="PreserveNewest" />
+    <RustCompile Include="Cargo.toml" />
     <RustCompile Include="src/*.rs" />
   </ItemGroup>
 
-  <Target Name="Cargo" BeforeTargets="Compile" Inputs="@(RustCompile)" Outputs="$(RustOutput)">
+  <Target Name="Cargo" BeforeTargets="CoreCompile" Inputs="@(RustCompile)" Outputs="$(RustOutput)">
     <Exec Condition="$(Configuration) == 'Debug'" Command="cargo build" />
     <Exec Condition="$(Configuration) == 'Release'" Command="cargo build --release" />
+    <Exec Command="rnet-gen $(RustOutput) > FFI.cs" />
   </Target>
 </Project>

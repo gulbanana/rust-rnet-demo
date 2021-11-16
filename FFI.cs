@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace FFI
+namespace RustDotnetBindgenDemo
 {    
     public static class RustDotnetBindgenDemo
     {

@@ -1,3 +1,3 @@
-﻿using FFI;
+﻿using static RustDotnetBindgenDemo.RustDotnetBindgenDemo;
 
-RustDotnetBindgenDemo.SayHello("world");
+SayHello("world");

@@ -19,9 +19,18 @@ namespace RustDotnetBindgenDemo
         ) {
             _FnSayHello(_AllocStr(name));
         }
+        public static int AddNumbers(
+            IReadOnlyCollection<int> values
+        ) {
+            return _FnAddNumbers(_AllocSlice<int, int>(values, 4, 4, _arg1 => _arg1));
+        }
         [DllImport("rust_dotnet_bindgen_demo", EntryPoint = "rnet_export_say_hello", CallingConvention = CallingConvention.Cdecl)]
         private static extern void _FnSayHello(
             _RawSlice name
+        );
+        [DllImport("rust_dotnet_bindgen_demo", EntryPoint = "rnet_export_add_numbers", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int _FnAddNumbers(
+            _RawSlice values
         );
 
 

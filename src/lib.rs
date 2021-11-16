@@ -1,25 +1,29 @@
 #![feature(core_intrinsics)]
-use std::intrinsics::unchecked_add;
+use std::{sync::Arc};
 use rnet::{net};
 rnet::root!();
 
-static mut NUMBERS: Vec<i32> = Vec::new();
+pub struct State {
+    numbers: Vec<i32>
+}
 
-#[net]
-unsafe fn set_numbers(values: &[i32]) {
-    NUMBERS = values.to_vec();
+impl State {
+    #[net]
+    pub fn init_state(values: &[i32]) -> Arc<State> {
+        Arc::new(State { numbers: values.to_vec() })
+    }
 }
 
 #[net]
-unsafe fn add_loop() -> i32 {
+pub fn add_loop(state: Arc<State>) -> i32 {
     let mut accum = 0;
-    for v in NUMBERS.iter() {
+    for v in state.numbers.iter() {
         accum += v;
     }
     return accum;
 }
 
 #[net]
-unsafe fn add_fold() -> i32 {
-    return NUMBERS.iter().fold(0, |a, b| unchecked_add(a, *b));
+pub fn add_fold(state: Arc<State>) -> i32 {
+    return state.numbers.iter().fold(0, |a, b| a + *b);
 }

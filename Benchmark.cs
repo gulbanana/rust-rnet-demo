@@ -3,7 +3,8 @@ using static RustDotnetBindgenDemo.RustDotnetBindgenDemo;
 
 public class Benchmark
 {
-    private int[] numbers;
+    private List<int> numbers;
+    private IOpaqueHandle state;
 
     [Params(1_000, 10_000, 100_000)] public int Count { get; set; }
 
@@ -11,8 +12,8 @@ public class Benchmark
     public void Setup()
     {
         var halfMax = int.MaxValue / 2;
-        numbers = Enumerable.Range(0, Count).Select(_ => Random.Shared.Next() - halfMax).ToArray();
-        SetNumbers(numbers);
+        numbers = Enumerable.Range(0, Count).Select(_ => Random.Shared.Next() - halfMax).ToList();
+        state = InitState(numbers);
     }
 
     [Benchmark(Baseline = true)]
@@ -35,12 +36,12 @@ public class Benchmark
     [Benchmark]
     public int UnmanagedLoop()
     {
-        return AddLoop();
+        return AddLoop(state);
     }
 
     [Benchmark]
     public int UnmanagedFold()
     {
-        return AddFold();
+        return AddFold(state);
     }
 }

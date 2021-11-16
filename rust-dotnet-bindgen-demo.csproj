@@ -1,22 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>RustDotnetBindgenDemo</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <RustOutput>target/$(Configuration.ToLower())/rust_dotnet_bindgen_demo.dll</RustOutput>
+    <RustTarget>target/$(Configuration.ToLower())/rust_dotnet_bindgen_demo</RustTarget>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="$(RustOutput)" Link="rust_dotnet_bindgen_demo.dll" CopyToOutputDirectory="PreserveNewest" />
     <RustCompile Include="Cargo.toml" />
     <RustCompile Include="src/*.rs" />
+    <UpToDateCheckInput Include="@(RustCompile)" />
+    <RustOutput Include="$(RustTarget).dll" />
+    <RustOutput Include="$(RustTarget).pdb" />
+    <Content Include="@(RustOutput)" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <Target Name="Cargo" BeforeTargets="CoreCompile" Inputs="@(RustCompile)" Outputs="$(RustOutput)">
+  <Target Name="Cargo" BeforeTargets="CoreCompile" Inputs="@(RustCompile)" Outputs="@(RustOutput)">
     <Exec Condition="$(Configuration) == 'Debug'" Command="cargo build" />
     <Exec Condition="$(Configuration) == 'Release'" Command="cargo build --release" />
-    <Exec Command="rnet-gen $(RustOutput) > FFI.cs" />
+    <Exec Command="rnet-gen $(RustTarget).dll > FFI.cs" />
   </Target>
 </Project>
